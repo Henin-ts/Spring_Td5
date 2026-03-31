@@ -1,6 +1,7 @@
 package com.example.SpringIngredient.controller;
 
 
+import com.example.SpringIngredient.dto.DishRequest;
 import com.example.SpringIngredient.entity.dish;
 import com.example.SpringIngredient.entity.ingredient;
 import com.example.SpringIngredient.repository.dishRepository;
@@ -70,5 +71,32 @@ public class dishController {
 
             return ResponseEntity.ok(dish);
         }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody List<DishRequest> requests) {
+
+        try {
+            return ResponseEntity
+                    .status(201)
+                    .body(dishService.createDishes(requests));
+
+        } catch (RuntimeException e) {
+
+            if (e.getMessage().contains("already exists")) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/")
+    public List<dish> getDishes(
+            @RequestParam(required = false) Double priceUnder,
+            @RequestParam(required = false) Double priceOver,
+            @RequestParam(required = false) String name
+    ) {
+        return dishService.getFilteredDishes(priceUnder, priceOver, name);
     }
 }

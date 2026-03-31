@@ -22,6 +22,7 @@ public class dish {
     @Column(name="dish_type")
     @Enumerated(EnumType.STRING)
     dishTypeEnum  dishType;
+    Double price;
     @OneToMany(mappedBy = "dish", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonManagedReference
     List<ingredient> ingredients;
